@@ -1,70 +1,106 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React from 'react';
+import { View, Image, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
+import axios from 'axios';
+// import { RaindropEffect } from '../../components/RaindropEffect'; // 水滴アニメーションのインポート
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import buttonImage1 from '../../assets/images/button1.png';
+import buttonImage2 from '../../assets/images/button2.png';
+import buttonImage3 from '../../assets/images/button3.png';
+import buttonImage4 from '../../assets/images/button4.png';
+import buttonImage5 from '../../assets/images/button5.png';
+import buttonImage6 from '../../assets/images/button6.png';
+
+const buttonImages: { [key: number]: any }  = {
+  1: buttonImage1,
+  2: buttonImage2,
+  3: buttonImage3,
+  4: buttonImage4,
+  5: buttonImage5,
+  6: buttonImage6
+};
+
+const buttonNames: { [key: number]: string } = {
+  1: 'Chrome',
+  2: 'file',
+  3: 'copy',  
+  4: 'paste',  
+  5: 'teams',
+  6: 'login'
+};
+
+// ノートPCのIPアドレス
+const SERVER_URL = 'http://10.21.0.182:5000/command';
 
 export default function HomeScreen() {
+  const sendData = async (buttonId: number) => {
+    const command = buttonNames[buttonId];
+    try {
+      const response = await axios.post(SERVER_URL, {
+        command: command,
+      });
+      Alert.alert(`Button ${buttonId} pressed! Response: ${response.data.status}`);
+    } catch (error) {
+      console.error('Error sending command:', error);
+      Alert.alert('Error', 'Failed to send command.');
+    }
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <View style={styles.container}>
+      {/* 背景に水滴アニメーションを追加 */}
+      {/* <RaindropEffect /> */}
+      
+      {/* ボタンを水滴アニメーションの上に表示 */}
+      <View style={styles.buttonGrid}>
+        {[1, 2, 3, 4, 5, 6].map((buttonId) => (
+          <TouchableOpacity
+            key={buttonId}
+            style={styles.button}
+            onPress={() => sendData(buttonId)}
+          >
+            <Image
+              source={buttonImages[buttonId]}
+              style={styles.buttonImage}
+            />
+            <Text style={styles.buttonText}>{buttonNames[buttonId]}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 8,
+    backgroundColor: '#f0f0f0',
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  buttonGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    width: 300,
+    justifyContent: 'space-between',
+    position: 'absolute', // ボタンをアニメーションの上に配置するための設定
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  button: {
+    width: 90,
+    height: 90,
+    margin: 5,
+    backgroundColor: '#aad6fa',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  buttonText: {
+    color: '#575af5',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  buttonImage: {
+    width: 60,
+    height: 60,
+    resizeMode: 'contain',
   },
 });
