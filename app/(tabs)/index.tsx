@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Image, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
-// import { RaindropEffect } from '../../components/RaindropEffect'; // 水滴アニメーションのインポート
 
 import buttonImage1 from '../../assets/images/button1.png';
 import buttonImage2 from '../../assets/images/button2.png';
@@ -29,7 +28,7 @@ const buttonNames: { [key: number]: string } = {
 };
 
 // ノートPCのIPアドレス
-const SERVER_URL = 'http://10.21.0.182:5000/command';
+const SERVER_URL = 'http://10.21.0.191:5000/command';
 
 export default function HomeScreen() {
   const sendData = async (buttonId: number) => {
@@ -75,32 +74,39 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#eef4fa', // 少し柔らかい背景色
   },
   buttonGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    width: 300,
+    width: 320,
     justifyContent: 'space-between',
-    position: 'absolute', // ボタンをアニメーションの上に配置するための設定
+    alignItems: 'center',
   },
   button: {
-    width: 90,
-    height: 90,
-    margin: 5,
-    backgroundColor: '#aad6fa',
+    width: 100,
+    height: 100,
+    margin: 10,
+    backgroundColor: '#4a90e2', // 見やすい青
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: 15,
+    shadowColor: '#000', // ボタンの影
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5, // Android用の影
   },
   buttonText: {
-    color: '#575af5',
-    fontSize: 16,
+    color: '#fff', // ボタン内の文字色を白
+    fontSize: 14,
+    fontWeight: '600',
     textAlign: 'center',
+    marginTop: 8,
   },
   buttonImage: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     resizeMode: 'contain',
   },
 });
